@@ -1,6 +1,6 @@
 import {build, BuildResult} from 'esbuild';
 import {buildOptions} from './config';
-import run from './runner';
+import {restart, run} from './runner';
 import resolveNodeModulePaths from './utils';
 
 let buildResult: BuildResult;
@@ -32,6 +32,8 @@ const rebuild = async () => {
   if (buildResult.rebuild) {
     await buildResult.rebuild();
   }
+  // Restart the process that was spawned after the initial build
+  restart();
 };
 
 // Clear the incremental build cache on process exit
