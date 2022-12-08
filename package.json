@@ -1,0 +1,47 @@
+{
+  "name": "es-node-runner",
+  "version": "0.1.0",
+  "description": "Transpiles Typescript or ES modules using esbuild and restarts the process automatically on change. Suitable for node development server.",
+  "license": "MIT",
+  "author": "Praveen Saravanan",
+  "main": "lib/index.js",
+  "types": "types/index.d.ts",
+  "repository": "https://github.com/pravesa/es-node-runner.git",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint",
+    "lint:fix": "yarn lint --fix",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.4.10",
+    "@types/node": "^18.11.11",
+    "@typescript-eslint/eslint-plugin": "^5.45.1",
+    "@typescript-eslint/parser": "^5.45.1",
+    "eslint": "^8.29.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^3.5.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.0",
+    "typescript": "^4.9.3"
+  },
+  "peerDependencies": {
+    "esbuild": "^0.16.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "lint-staged": {
+    "*.{ts}": [
+      "prettier --write",
+      "eslint --max-warnings=0 --fix"
+    ],
+    "*.{md,json}": "prettier --write"
+  }
+}
