@@ -9,6 +9,7 @@
   "repository": "https://github.com/pravesa/es-node-runner.git",
   "scripts": {
     "build": "tsc",
+    "start": "esbuild src/index.ts --outdir=./lib --bundle --platform=node --target=node14 --external:./node_modules/*",
     "lint": "eslint",
     "lint:fix": "yarn lint --fix",
     "prepare": "husky install"
@@ -22,6 +23,7 @@
     "@types/node": "^18.11.11",
     "@typescript-eslint/eslint-plugin": "^5.45.1",
     "@typescript-eslint/parser": "^5.45.1",
+    "esbuild": "^0.16.2",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^3.5.2",
