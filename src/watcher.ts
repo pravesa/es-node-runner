@@ -3,7 +3,8 @@ import {watch} from 'chokidar';
 import {rebuild, initialBuild} from './transpiler';
 
 export default () => {
-  const watcher = watch('src', {
+  // Watch test folder for changes
+  const watcher = watch('test', {
     ignoreInitial: true,
   });
 

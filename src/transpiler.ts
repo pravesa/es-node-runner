@@ -1,4 +1,5 @@
 import {build, BuildResult} from 'esbuild';
+import run from './runner';
 import resolveNodeModulePaths from './utils';
 
 let buildResult: BuildResult;
@@ -9,7 +10,8 @@ const initialBuild = async () => {
   const outfile = './node_modules/.cache/esbuild/server.js';
 
   buildResult = await build({
-    entryPoints: ['src/index.ts'],
+    // For manual testing -> 'test/example/src/index.ts'
+    entryPoints: ['test/example/src/index.ts'],
     allowOverwrite: true,
     bundle: true,
     platform: 'node',
@@ -19,6 +21,9 @@ const initialBuild = async () => {
     external: resolveNodeModulePaths(),
     outfile: outfile,
   });
+
+  // Spawn a child process (eg: server) once the initial build finishes.
+  run([outfile]);
 };
 
 // Rebuild the entry points as many times with the same buildoptions
