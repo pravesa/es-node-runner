@@ -1,8 +1,8 @@
 import {build, BuildResult} from 'esbuild';
 import DEBUG from 'debug';
-import {buildOptions} from './config';
+import {buildOptions, spawnOptions} from './config';
 import {restart, run} from './runner';
-import resolveNodeModulePaths from './utils';
+import {debounce, resolveNodeModulePaths} from './utils';
 
 const debug = DEBUG('es-node-runner:transpiler');
 
@@ -34,8 +34,10 @@ const initialBuild = async () => {
   run([outfile]);
 };
 
-// Rebuild the entry points as many times with the same buildoptions
-const rebuild = async () => {
+// Rebuild can be called to build the project with same build options as many times.
+// Additionally, this function is passed to the debounce function for avoiding repeated
+// rebuild in short time. It has default delay of 1000 ms and can be configured.
+const rebuild = debounce(async () => {
   debug('starting rebuild');
 
   if (buildResult.rebuild) {
@@ -45,7 +47,7 @@ const rebuild = async () => {
   debug('rebuild completed');
   // Restart the process that was spawned after the initial build
   restart();
-};
+}, spawnOptions.delay);
 
 // Clear the incremental build cache on process exit
 const dispose = () => {

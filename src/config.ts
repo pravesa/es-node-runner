@@ -14,9 +14,14 @@ interface WatchOptions {
   ignore?: string[];
 }
 
+interface SpawnOptions {
+  delay: number;
+}
+
 type OverridableConfig = {
   buildOptions: BuildOptions;
   watchOptions: WatchOptions;
+  spawnOptions: SpawnOptions;
 };
 
 export type Config = {
@@ -67,6 +72,9 @@ const loadConfig = () => {
       watch: 'src',
       ignore: undefined,
     },
+    spawnOptions: {
+      delay: 1000,
+    },
   };
 
   let userConfig: Config;
@@ -102,4 +110,4 @@ const loadConfig = () => {
 
 // Do not export loadConfig() as it will be called again
 // when imported in each modules.
-export const {buildOptions, watchOptions} = loadConfig();
+export const {buildOptions, watchOptions, spawnOptions} = loadConfig();
