@@ -1,6 +1,9 @@
 /* eslint-disable no-console */
 import {ChildProcess, exec, execSync} from 'child_process';
 import {spawn} from 'cross-spawn';
+import DEBUG from 'debug';
+
+const debug = DEBUG('es-node-runner:server');
 
 let child: ChildProcess, reRun: () => void;
 
@@ -13,6 +16,7 @@ const isWin = process.platform === 'win32';
  * @param spawnArgs array of spawn arguments
  */
 function run(this: unknown, spawnArgs: string[]) {
+  debug('spawning new sub process');
   const subProcess = spawn('node', spawnArgs, {
     stdio: [process.stdin, process.stdout, process.stderr],
     env: {
@@ -25,6 +29,7 @@ function run(this: unknown, spawnArgs: string[]) {
 
   // Exit the process with code 1 for any signal received during child process creation.
   if (subProcess.signalCode) {
+    debug(`received '${subProcess.signalCode}' signal in sub process`);
     console.log(
       'The command execution failed because the process exited too early.'
     );
@@ -38,19 +43,27 @@ function run(this: unknown, spawnArgs: string[]) {
         'Someone might have called `kill` or `killall`, or the system could be shutting down.\n'
       );
     }
+    debug('exiting sub process with code 1');
     process.exit(1);
   }
 
   subProcess.on('spawn', () => {
+    debug(
+      child?.pid !== subProcess.pid
+        ? 'sub process spawned'
+        : 'sub process respawned'
+    );
     child = subProcess;
   });
 
-  // Listens for error event in subprocess
+  // Listens for error event in sub process
   subProcess.on('error', (error: NodeJS.ErrnoException) => {
+    debug(`error occurred in sub process ${subProcess.pid}`);
     console.log(`[Error]: ${error.code} - ${error.message}\n`);
 
     // Exit the process for file not found error
     if (error.code === 'ENOENT') {
+      debug('exiting sub process with code 1');
       process.exit(1);
     } else {
       throw error;
@@ -59,6 +72,7 @@ function run(this: unknown, spawnArgs: string[]) {
 
   // Listens for an exit event
   subProcess.once('exit', (code: number) => {
+    debug(`sub process ${subProcess.pid} exited with code ${code}`);
     if (code > 0) {
       console.log(`server exited with code ${code}`);
     }
@@ -71,9 +85,12 @@ function stop() {
   // On successful termination, status will be assigned with number 48 (ASCII Code) for 0
   let status = -1;
 
+  debug('terminating child processes');
+
   if (child && child.pid) {
     // Windows specific kill implementation
     if (isWin) {
+      debug('executing windows kill cmd');
       try {
         // Here, the cmd is executed to terminate the process gracefully. It is recommended to use powershell's CIM cmdlet over
         // wmic cmd - "wmic process where (ParentProcessId=${child.pid}) get ProcessId 2> nul"
@@ -84,7 +101,9 @@ function stop() {
         );
         // Read the buffer at index 0 for termination status from powershell cmd
         status = terminationStatus.readUInt8(0);
+        debug('child processes killed gracefully');
       } catch (error) {
+        debug('terminating child processes forcefully');
         try {
           // Taskkill cmd will terminate the process forcefully if the graceful termination fails.
           exec(`TASKKILL /PID ${child.pid} /F /T`);
@@ -99,6 +118,7 @@ function stop() {
       }
       // Non-windows specific kill implementation
     } else {
+      debug('executing non-windows kill cmd');
       try {
         // This one uses 'ps' cmd available in non-windows platform to terminate the process gracefully.
         // Alternate approach is to use "pstree -p ${parent.pid} -T | grep -oe '([0-9]*)' | grep -oP '[0-9]+'"
@@ -118,6 +138,7 @@ function stop() {
         child.kill();
 
         status = 48;
+        debug('child processes killed gracefully');
       } catch (error) {
         console.log(
           'Could not terminate cleanly. One or more child processes were still running. ' +
@@ -135,10 +156,12 @@ function stop() {
 // This method restarts the node process by first invoking stop() and
 // then reRun() will be invoked when the returned value from stop is 48.
 function restart() {
+  debug('restarting process after rebuild');
   // Stop returns ascii char 48 for successful termination
   if (stop() === 48) {
     reRun();
   } else {
+    debug('could not restart process');
     console.log('Could not restart process');
   }
 }

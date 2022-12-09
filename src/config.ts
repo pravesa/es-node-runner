@@ -1,4 +1,7 @@
 import {resolve} from 'path';
+import DEBUG from 'debug';
+
+const debug = DEBUG('es-node-runner:config');
 
 interface BuildOptions {
   entry: string;
@@ -50,6 +53,7 @@ const overrideTargetObj = <T extends Record<string, any>>(
 // Loads the user defined config from root of the cwd and overrides the
 // default config values.
 const loadConfig = () => {
+  debug('loading config');
   const cwd = process.cwd();
 
   // Default configuration
@@ -68,19 +72,30 @@ const loadConfig = () => {
   let userConfig: Config;
 
   try {
+    debug('looking for es-node-runner.config file');
     // Try to load es-node-runner.config.{js,json}
     userConfig = require(resolve(cwd, 'es-node-runner.config'));
   } catch (error) {
+    debug(
+      'es-node-runner.config file not found...looking for config in package.json'
+    );
     // If no es-node-runner.config file found, look for configs in package.json
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const packageJson = require(resolve(cwd, 'package.json'));
 
-    userConfig = packageJson['es-node-runner'];
+    userConfig = packageJson['es-node-runner'] ?? {};
   }
+
+  debug(
+    Object.keys(userConfig).length === 0
+      ? 'user config not found...using default config'
+      : 'overriding default config with user config'
+  );
 
   // Call the overrideTargetObj method with defaultConfig and userConfig to
   // override the config
   overrideTargetObj(defaultConfig, userConfig);
+  debug('config loaded');
 
   return defaultConfig;
 };
