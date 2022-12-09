@@ -4,23 +4,40 @@ import DEBUG from 'debug';
 const debug = DEBUG('es-node-runner:config');
 
 interface BuildOptions {
+  /** Entry point for bundling
+   * @default 'src/index.ts' */
   entry: string;
+  /** Sets the target for generated code
+   * @see https://esbuild.github.io/api/#target
+   * @default 'node14' */
   target: string;
+  /** Generates sourcemap
+   * @default true */
   sourcemap: boolean;
 }
 
 interface WatchOptions {
+  /** Path or list of paths to be watched for changes.
+   * @example watch: 'src' or ['src', 'lib']
+   * @default 'src' */
   watch: string | string[];
+  /** Ignore list of files / paths from watching for changes.
+   * @example ignore: ['**\/*.{test,spec}.ts'] */
   ignore?: string[];
 }
 
 interface SpawnOptions {
+  /** Rebuild will be delayed by specified time (in millisecond).
+   * @default delay: 1000 */
   delay: number;
 }
 
 type OverridableConfig = {
+  /** Specifies options for building and rebuilding project */
   buildOptions: BuildOptions;
+  /** Specifies options for configuring watcher */
   watchOptions: WatchOptions;
+  /** Specifies options to be used while spawning a process */
   spawnOptions: SpawnOptions;
 };
 
