@@ -30,6 +30,10 @@ interface SpawnOptions {
   /** Rebuild will be delayed by specified time (in millisecond).
    * @default delay: 1000 */
   delay: number;
+  /** Restart sub process manually with terminal cmd
+   * @example restartCmd: 'rst'
+   * @default 'rs' */
+  restartCmd: string;
 }
 
 type OverridableConfig = {
@@ -91,6 +95,7 @@ const loadConfig = () => {
     },
     spawnOptions: {
       delay: 1000,
+      restartCmd: 'rs',
     },
   };
 

@@ -41,6 +41,8 @@ watchOptions: {
 spawnOptions: {
     // Rebuild will be delayed by specified time (in millisecond).
     delay: number,
+    // Restart sub process manually with terminal cmd
+    restartCmd: string;
 },
 ```
 

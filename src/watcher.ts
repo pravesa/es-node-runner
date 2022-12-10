@@ -8,7 +8,40 @@ import {logger} from './utils';
 
 const debug = DEBUG('es-node-runner:watcher');
 
-const {delay} = spawnOptions;
+const {delay, restartCmd} = spawnOptions;
+
+function restartSubProcess() {
+  // Mark the sub process start timestamp
+  global.SUB_PROCESS_RESTART_TIME = performance.now();
+
+  // Rebuild happens whenever the watching files changes
+  rebuild();
+}
+
+function restartOnChange(action: string) {
+  debug(`${action}`);
+  logger.alert(
+    `\n[Watcher]: ${action}\n` + `Sub process will restart after ${delay} ms\n`
+  );
+
+  restartSubProcess();
+}
+
+// Read user cmd and take respective action
+process.stdin.on('data', (data) => {
+  const cmd = data.toString().trimEnd();
+
+  switch (cmd) {
+    // Matches restart cmd
+    case restartCmd:
+      logger.alert(`\nreceived '${cmd}' cmd, restarting sub process...\n`);
+      restartSubProcess();
+      break;
+    default:
+      logger.warn(`unrecognized '${cmd}' cmd`);
+      break;
+  }
+});
 
 export default () => {
   // Initiate the watcher with array of paths to be watched and optional options
@@ -27,17 +60,7 @@ export default () => {
 
     watcher
       .on('change', (path) => {
-        debug(`${path} was changed`);
-        logger.alert(
-          `\n[Watcher]: ${path} was changed\n` +
-            `Server will restart after ${delay} ms\n`
-        );
-
-        // Mark the sub process start timestamp
-        global.SUB_PROCESS_RESTART_TIME = performance.now();
-
-        // Rebuild happens whenever the watching files changes
-        rebuild();
+        restartOnChange(`${path} was changed`);
       })
       .on('error', (error) => {
         debug(`watcher error - ${error}`);
