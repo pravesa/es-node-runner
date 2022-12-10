@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import DEBUG from 'debug';
 import {performance} from 'perf_hooks';
+import {dispose} from './transpiler';
 import {formatElapsedTime, logger} from './utils';
 import watch from './watcher';
 
@@ -32,6 +33,8 @@ process.on('exit', (code: number) => {
 });
 
 process.on('SIGTERM', () => {
+  // Dispose the build cache on termination
+  dispose();
   debug('received termination signal');
   process.exit(0);
 });
