@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import {watch} from 'chokidar';
 import DEBUG from 'debug';
+import {performance} from 'perf_hooks';
 import {spawnOptions, watchOptions} from './config';
 import {rebuild, initialBuild} from './transpiler';
 import {logger} from './utils';
@@ -31,6 +32,10 @@ export default () => {
           `\n[Watcher]: ${path} was changed\n` +
             `Server will restart after ${delay} ms\n`
         );
+
+        // Mark the sub process start timestamp
+        global.SUB_PROCESS_RESTART_TIME = performance.now();
+
         // Rebuild happens whenever the watching files changes
         rebuild();
       })

@@ -1,10 +1,12 @@
 import {build, BuildResult} from 'esbuild';
 import DEBUG from 'debug';
+import {performance} from 'perf_hooks';
 import {buildOptions, spawnOptions} from './config';
 import {restart, run} from './runner';
 import {debounce, logger, resolveNodeModulePaths} from './utils';
 
 const debug = DEBUG('es-node-runner:transpiler');
+const lightning = '\u26A1';
 
 let buildResult: BuildResult;
 
@@ -12,6 +14,7 @@ let buildResult: BuildResult;
 // and output the bundled file at specified path.
 const initialBuild = async () => {
   debug('starting initial build');
+  const BUILD_START_TIME = performance.now();
 
   const {entry, ...options} = buildOptions;
   const outfile = './node_modules/.cache/esbuild/index.js';
@@ -28,14 +31,22 @@ const initialBuild = async () => {
     ...options,
   });
 
-  logger.info('[Esbuild]: Build completed\n');
+  logger.info(
+    `[Esbuild]: ${lightning} Build completed in ${(
+      performance.now() - BUILD_START_TIME
+    ).toFixed(2)} ms\n`
+  );
 
   debug('initial build completed');
 
   // Spawn a child process (eg: server) once the initial build finishes.
   run([outfile]);
 
-  logger.success('[Sub Process]: Spawned\n');
+  logger.success(
+    `[Sub Process]: Spawned in ${(
+      performance.now() - global.PROCESS_START_TIME
+    ).toFixed(2)} ms\n`
+  );
 };
 
 // Rebuild can be called to build the project with same build options as many times.
@@ -43,18 +54,27 @@ const initialBuild = async () => {
 // rebuild in short time. It has default delay of 1000 ms and can be configured.
 const rebuild = debounce(async () => {
   debug('starting rebuild');
+  const REBUILD_START_TIME = performance.now();
 
   if (buildResult.rebuild) {
     await buildResult.rebuild();
   }
 
-  logger.info('[Esbuild]: Rebuild completed\n');
+  logger.info(
+    `[Esbuild]: ${lightning} Rebuild completed in ${(
+      performance.now() - REBUILD_START_TIME
+    ).toFixed(2)} ms\n`
+  );
 
   debug('rebuild completed');
   // Restart the process that was spawned after the initial build
   restart();
 
-  logger.success('[Sub Process]: Respawned\n');
+  logger.success(
+    `[Sub Process]: Respawned in ${(
+      performance.now() - global.SUB_PROCESS_RESTART_TIME
+    ).toFixed(2)} ms\n`
+  );
 }, spawnOptions.delay);
 
 // Clear the incremental build cache on process exit
