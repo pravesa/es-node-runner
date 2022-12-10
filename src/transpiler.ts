@@ -2,7 +2,7 @@ import {build, BuildResult} from 'esbuild';
 import DEBUG from 'debug';
 import {buildOptions, spawnOptions} from './config';
 import {restart, run} from './runner';
-import {debounce, resolveNodeModulePaths} from './utils';
+import {debounce, logger, resolveNodeModulePaths} from './utils';
 
 const debug = DEBUG('es-node-runner:transpiler');
 
@@ -28,10 +28,14 @@ const initialBuild = async () => {
     ...options,
   });
 
+  logger.info('[Esbuild]: Build completed\n');
+
   debug('initial build completed');
 
   // Spawn a child process (eg: server) once the initial build finishes.
   run([outfile]);
+
+  logger.success('[Sub Process]: Spawned\n');
 };
 
 // Rebuild can be called to build the project with same build options as many times.
@@ -44,9 +48,13 @@ const rebuild = debounce(async () => {
     await buildResult.rebuild();
   }
 
+  logger.info('[Esbuild]: Rebuild completed\n');
+
   debug('rebuild completed');
   // Restart the process that was spawned after the initial build
   restart();
+
+  logger.success('[Sub Process]: Respawned\n');
 }, spawnOptions.delay);
 
 // Clear the incremental build cache on process exit
@@ -54,6 +62,7 @@ const dispose = () => {
   debug('disposing build cache');
   buildResult.rebuild?.dispose();
   debug('build cache disposed');
+  logger.info('[Esbuild]: Build cache disposed\n');
 };
 
 export {initialBuild, rebuild, dispose};

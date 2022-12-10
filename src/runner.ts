@@ -2,6 +2,7 @@
 import {ChildProcess, exec, execSync} from 'child_process';
 import {spawn} from 'cross-spawn';
 import DEBUG from 'debug';
+import {logger} from './utils';
 
 const debug = DEBUG('es-node-runner:server');
 
@@ -30,16 +31,16 @@ function run(this: unknown, spawnArgs: string[]) {
   // Exit the process with code 1 for any signal received during child process creation.
   if (subProcess.signalCode) {
     debug(`received '${subProcess.signalCode}' signal in sub process`);
-    console.log(
+    logger.error(
       'The command execution failed because the process exited too early.'
     );
 
     if (subProcess.signalCode === 'SIGKILL') {
-      console.log(
+      logger.error(
         'This probably means the system ran out of memory or someone called "kill -9" on the process.\n'
       );
     } else if (subProcess.signalCode === 'SIGTERM') {
-      console.log(
+      logger.error(
         'Someone might have called `kill` or `killall`, or the system could be shutting down.\n'
       );
     }
@@ -59,7 +60,7 @@ function run(this: unknown, spawnArgs: string[]) {
   // Listens for error event in sub process
   subProcess.on('error', (error: NodeJS.ErrnoException) => {
     debug(`error occurred in sub process ${subProcess.pid}`);
-    console.log(`[Error]: ${error.code} - ${error.message}\n`);
+    logger.error(`[Error]: ${error.code} - ${error.message}\n`);
 
     // Exit the process for file not found error
     if (error.code === 'ENOENT') {
@@ -74,7 +75,7 @@ function run(this: unknown, spawnArgs: string[]) {
   subProcess.once('exit', (code: number) => {
     debug(`sub process ${subProcess.pid} exited with code ${code}`);
     if (code > 0) {
-      console.log(`server exited with code ${code}`);
+      logger.error(`Sub process exited with code ${code}\n`);
     }
   });
 }
@@ -109,7 +110,7 @@ function stop() {
           exec(`TASKKILL /PID ${child.pid} /F /T`);
           status = 48;
         } catch (error) {
-          console.log(
+          logger.error(
             'Could not terminate cleanly. One or more child processes were still running. ' +
               `More info : ${error}\n`
           );
@@ -140,7 +141,7 @@ function stop() {
         status = 48;
         debug('child processes killed gracefully');
       } catch (error) {
-        console.log(
+        logger.error(
           'Could not terminate cleanly. One or more child processes were still running. ' +
             `More info : ${error}\n`
         );
@@ -162,7 +163,7 @@ function restart() {
     reRun();
   } else {
     debug('could not restart process');
-    console.log('Could not restart process');
+    logger.error('Could not restart process\n');
   }
 }
 
