@@ -1,5 +1,7 @@
 # es-node-runner
 
+![npm](https://img.shields.io/npm/v/es-node-runner) ![NPM](https://img.shields.io/npm/l/es-node-runner) ![npm bundle size](https://img.shields.io/bundlephobia/min/es-node-runner)
+
 Transpiles Typescript or ES modules using esbuild and restarts the process automatically on change. Suitable for node development server.
 
 ## Usage
