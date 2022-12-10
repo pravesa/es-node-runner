@@ -19,6 +19,7 @@
   "files": [
     "types/*"
   ],
+  "bin": "lib/index.js",
   "main": "lib/index.js",
   "types": "types/index.d.ts",
   "repository": "https://github.com/pravesa/es-node-runner.git",
