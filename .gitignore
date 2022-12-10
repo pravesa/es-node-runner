@@ -39,6 +39,7 @@ build/Release
 
 # Output directory
 lib
+types
 
 # Dependency directories
 node_modules/
