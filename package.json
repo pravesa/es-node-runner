@@ -8,8 +8,9 @@
   "types": "types/index.d.ts",
   "repository": "https://github.com/pravesa/es-node-runner.git",
   "scripts": {
-    "build": "tsc",
-    "start": "esbuild src/index.ts --outdir=./lib --bundle --platform=node --target=node14 --external:./node_modules/* & set DEBUG=* & node lib/index",
+    "build": "esbuild src/index.ts --outdir=./lib --bundle --platform=node --target=node14 --external:./node_modules/*",
+    "postbuild": "tsc src/config.ts --declaration --emitDeclarationOnly --outfile types/index.d.ts",
+    "start": "set DEBUG=* & node lib/index",
     "lint": "eslint",
     "lint:fix": "yarn lint --fix",
     "prepare": "husky install"

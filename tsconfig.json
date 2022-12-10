@@ -18,15 +18,7 @@
     "noUnusedParameters": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-
-    "rootDir": "./src",
-    "sourceMap": true,
-    "outDir": "./lib",
-    "stripInternal": true,
-    "declaration": true,
-    "declarationMap": true,
-    "declarationDir": "./types"
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]
