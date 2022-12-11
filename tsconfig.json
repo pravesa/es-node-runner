@@ -18,7 +18,9 @@
     "noUnusedParameters": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "removeComments": true
   },
   "include": ["src"],
   "exclude": ["node_modules"]
