@@ -37,6 +37,10 @@ interface SpawnOptions {
   /** Clear the terminal output before restart
    * @default false */
   clearTerminal: boolean;
+  /** To restart manually with cmd, set this to false. This is helpful
+   * if we want to restart only when necessary.
+   * @default true */
+  autoRestart: boolean;
 }
 
 type OverridableConfig = {
@@ -100,6 +104,7 @@ const loadConfig = () => {
       delay: 1000,
       restartCmd: 'rs',
       clearTerminal: false,
+      autoRestart: true,
     },
   };
 

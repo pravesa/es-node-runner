@@ -8,7 +8,7 @@ import {logger} from './utils';
 
 const debug = DEBUG('es-node-runner:watcher');
 
-const {delay, restartCmd, clearTerminal} = spawnOptions;
+const {delay, restartCmd, clearTerminal, autoRestart} = spawnOptions;
 
 // Clears the terminal output
 function clearTerminalOutput() {
@@ -59,28 +59,31 @@ process.stdin.on('data', (data) => {
   }
 });
 
-export default () => {
-  // Initiate the watcher with array of paths to be watched and optional options
-  // from the loaded config
-  const watcher = watch(watchOptions.watch, {
-    ignoreInitial: true,
-    ignored: watchOptions.ignore,
-  });
-
-  watcher.on('ready', () => {
-    debug('ready to watch for file changes');
-
-    logger.alert('[Watcher]: Watching for file changes\n');
-    // Initiates the incremental build once the watcher is ready.
-    initialBuild();
-
-    watcher
-      .on('change', (path) => {
-        restartOnChange(`${path} was changed`);
-      })
-      .on('error', (error) => {
-        debug(`watcher error - ${error}`);
-        console.log(`error - ${error}`);
+// If autoRestart is false, then watcher will not be enabled.
+export default autoRestart === false
+  ? () => initialBuild()
+  : () => {
+      // Initiate the watcher with array of paths to be watched and optional options
+      // from the loaded config
+      const watcher = watch(watchOptions.watch, {
+        ignoreInitial: true,
+        ignored: watchOptions.ignore,
       });
-  });
-};
+
+      watcher.on('ready', () => {
+        debug('ready to watch for file changes');
+
+        logger.alert('[Watcher]: Watching for file changes\n');
+        // Initiates the incremental build once the watcher is ready.
+        initialBuild();
+
+        watcher
+          .on('change', (path) => {
+            restartOnChange(`${path} was changed`);
+          })
+          .on('error', (error) => {
+            debug(`watcher error - ${error}`);
+            console.log(`error - ${error}`);
+          });
+      });
+    };
