@@ -34,7 +34,6 @@
     "lint:fix": "yarn lint --fix",
     "prepare": "husky install",
     "preversion": "yarn lint:fix",
-    "prepublish": "yarn build",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
