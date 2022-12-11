@@ -1,6 +1,6 @@
 {
   "name": "es-node-runner",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Transpiles Typescript or ES modules using esbuild and restarts the process automatically on change. Suitable for node development server.",
   "keywords": [
     "monitor",
