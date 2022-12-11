@@ -59,37 +59,40 @@ const initialBuild = async () => {
 // Rebuild can be called to build the project with same build options as many times.
 // Additionally, this function is passed to the debounce function for avoiding repeated
 // rebuild in short time. It has default delay of 1000 ms and can be configured.
-const rebuild = debounce(async () => {
-  debug('starting rebuild');
-  const REBUILD_START_TIME = performance.now();
+const rebuild = debounce(
+  async () => {
+    debug('starting rebuild');
+    const REBUILD_START_TIME = performance.now();
 
-  if (buildResult.rebuild) {
-    try {
-      await buildResult.rebuild();
+    if (buildResult.rebuild) {
+      try {
+        await buildResult.rebuild();
 
-      logger.info(
-        `[Esbuild]: ${lightning} Rebuild completed in ${(
-          performance.now() - REBUILD_START_TIME
-        ).toFixed(2)} ms\n`
-      );
+        logger.info(
+          `[Esbuild]: ${lightning} Rebuild completed in ${(
+            performance.now() - REBUILD_START_TIME
+          ).toFixed(2)} ms\n`
+        );
 
-      debug('rebuild completed');
-    } catch (error) {
-      debug('rebuild failed');
-      throw error;
+        debug('rebuild completed');
+      } catch (error) {
+        debug('rebuild failed');
+        throw error;
+      }
     }
-  }
 
-  debug('rebuild completed');
-  // Restart the process that was spawned after the initial build
-  restart();
+    debug('rebuild completed');
+    // Restart the process that was spawned after the initial build
+    restart();
 
-  logger.success(
-    `[Sub Process]: Respawned in ${(
-      performance.now() - global.SUB_PROCESS_RESTART_TIME
-    ).toFixed(2)} ms\n`
-  );
-}, spawnOptions.delay);
+    logger.success(
+      `[Sub Process]: Respawned in ${(
+        performance.now() - global.SUB_PROCESS_RESTART_TIME
+      ).toFixed(2)} ms\n`
+    );
+  },
+  spawnOptions.autoRestart === false ? 0 : spawnOptions.delay
+);
 
 // Clear the incremental build cache on process exit
 const dispose = () => {
