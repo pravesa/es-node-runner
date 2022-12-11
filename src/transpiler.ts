@@ -6,7 +6,7 @@ import {restart, run} from './runner';
 import {debounce, logger, resolveNodeModulePaths} from './utils';
 
 const debug = DEBUG('es-node-runner:transpiler');
-const lightning = '\u26A1';
+const lightning = process.stdout.isTTY ? '\u26A1' : '';
 
 let buildResult: BuildResult;
 

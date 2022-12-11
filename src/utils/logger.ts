@@ -35,16 +35,24 @@ type LoggerColors = keyof typeof COLORS;
 
 // Custom logger with color support extending Console
 class Logger extends Console {
-  constructor() {
-    super(process.stdout, process.stderr, false);
-  }
-
-  printToConsole(
+  // Default print to console with color enabled
+  printToConsole = (
     message: unknown,
     optionalParams: unknown[],
     color: LoggerColors
-  ) {
+  ) => {
     super.log(`\x1B[38;5;${COLORS[color]}${message}\x1B[0m`, ...optionalParams);
+  };
+
+  constructor() {
+    super(process.stdout, process.stderr, false);
+
+    // Without color if the stdout is not tty
+    if (!process.stdout.isTTY) {
+      this.printToConsole = (message: unknown, optionalParams: unknown[]) => {
+        super.log(message, ...optionalParams);
+      };
+    }
   }
 
   override log(message?: unknown, ...optionalParams: unknown[]): void {
