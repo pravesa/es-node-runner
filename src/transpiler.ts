@@ -19,23 +19,30 @@ const initialBuild = async () => {
   const {entry, ...options} = buildOptions;
   const outfile = './node_modules/.cache/esbuild/index.js';
 
-  // Call the build with loaded config
-  buildResult = await build({
-    entryPoints: [entry],
-    allowOverwrite: true,
-    bundle: true,
-    platform: 'node',
-    incremental: true,
-    external: resolveNodeModulePaths(),
-    outfile: outfile,
-    ...options,
-  });
+  try {
+    // Call the build with loaded config
+    buildResult = await build({
+      entryPoints: [entry],
+      allowOverwrite: true,
+      bundle: true,
+      platform: 'node',
+      incremental: true,
+      external: resolveNodeModulePaths(),
+      outfile: outfile,
+      ...options,
+    });
 
-  logger.info(
-    `[Esbuild]: ${lightning} Build completed in ${(
-      performance.now() - BUILD_START_TIME
-    ).toFixed(2)} ms\n`
-  );
+    logger.info(
+      `[Esbuild]: ${lightning} Build completed in ${(
+        performance.now() - BUILD_START_TIME
+      ).toFixed(2)} ms\n`
+    );
+
+    debug('build completed');
+  } catch (error) {
+    debug('build failed');
+    throw error;
+  }
 
   debug('initial build completed');
 
@@ -57,14 +64,21 @@ const rebuild = debounce(async () => {
   const REBUILD_START_TIME = performance.now();
 
   if (buildResult.rebuild) {
-    await buildResult.rebuild();
-  }
+    try {
+      await buildResult.rebuild();
 
-  logger.info(
-    `[Esbuild]: ${lightning} Rebuild completed in ${(
-      performance.now() - REBUILD_START_TIME
-    ).toFixed(2)} ms\n`
-  );
+      logger.info(
+        `[Esbuild]: ${lightning} Rebuild completed in ${(
+          performance.now() - REBUILD_START_TIME
+        ).toFixed(2)} ms\n`
+      );
+
+      debug('rebuild completed');
+    } catch (error) {
+      debug('rebuild failed');
+      throw error;
+    }
+  }
 
   debug('rebuild completed');
   // Restart the process that was spawned after the initial build
