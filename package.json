@@ -17,6 +17,7 @@
   "license": "MIT",
   "author": "Praveen Saravanan",
   "files": [
+    "lib/*",
     "types/*"
   ],
   "bin": {
@@ -36,7 +37,8 @@
   "dependencies": {
     "chokidar": "^3.5.3",
     "cross-spawn": "^7.0.3",
-    "debug": "^4.3.4"
+    "debug": "^4.3.4",
+    "esbuild": "^0.16.4"
   },
   "devDependencies": {
     "@types/chokidar": "^2.1.3",
