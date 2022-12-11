@@ -2,7 +2,7 @@
 
 ![npm](https://img.shields.io/npm/v/es-node-runner) ![NPM](https://img.shields.io/npm/l/es-node-runner) ![npm bundle size](https://img.shields.io/bundlephobia/min/es-node-runner)
 
-Transpiles Typescript or ES modules using esbuild and restarts the process automatically on change. Suitable for node development server.
+Node runner that transpiles typescript or es modules using blazing fast ⚡ esbuild and restarts the process automatically on change. Suitable for node development server.
 
 ## Usage
 
@@ -19,11 +19,19 @@ Transpiles Typescript or ES modules using esbuild and restarts the process autom
 
    There is no cascading of configs, so searching for config will end as soon as any of the above file is found. If no config is found, default config will be used.
 
-3. Then, add `es-node-runner` to package.json scripts and run the script using npm or yarn as, `npm run <script_name>` or `yarn <script_name>`
+3. Finally, add `es-node-runner` or `enr` to package.json scripts</br>
+   ```json
+   {
+     "scripts": {
+       "<script_name>": "es-node-runner" // or "enr"
+     }
+   }
+   ```
+   and run the script using npm or yarn as, `npm run <script_name>` or `yarn <script_name>`
 
 ## Configurations
 
-List of options available for configuring es-node-runner are as follows,
+Following options are available for configuring es-node-runner.
 
 ```ts
 buildOptions: {
@@ -45,6 +53,10 @@ spawnOptions: {
     delay: number,
     // Restart sub process manually with terminal cmd
     restartCmd: string;
+    // Clear the terminal output before restart
+    clearTerminal: boolean;
+    // To restart manually with cmd, set this to false. This is helpful if we want to restart only when necessary
+    autoRestart: boolean;
 },
 ```
 
