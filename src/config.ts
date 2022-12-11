@@ -41,6 +41,9 @@ interface SpawnOptions {
    * if we want to restart only when necessary.
    * @default true */
   autoRestart: boolean;
+  /** Enable or disable logging
+   * @default true */
+  logging: boolean;
 }
 
 type OverridableConfig = {
@@ -105,6 +108,7 @@ const loadConfig = () => {
       restartCmd: 'rs',
       clearTerminal: false,
       autoRestart: true,
+      logging: true,
     },
   };
 

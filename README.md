@@ -52,17 +52,34 @@ spawnOptions: {
     // Rebuild will be delayed by specified time (in millisecond).
     delay: number,
     // Restart sub process manually with terminal cmd
-    restartCmd: string;
+    restartCmd: string,
     // Clear the terminal output before restart
-    clearTerminal: boolean;
+    clearTerminal: boolean,
     // To restart manually with cmd, set this to false. This is helpful if we want to restart only when necessary
-    autoRestart: boolean;
+    autoRestart: boolean,
+    // Enable or disable logging
+    logging: boolean,
 },
 ```
 
 Note: All options are optional.
 
-For auto-completion,
+#### For flexibility, prefer js config over json.
+
+##### Example
+
+```js
+module.exports = {
+  spawnOptions: {
+    // This will disables the logging if debug is enabled
+    logging: !process.env.DEBUG,
+  },
+};
+```
+
+#### For auto-completion, add `@type` jsdoc comment.
+
+##### Example
 
 ```js
 /**

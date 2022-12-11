@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 
 import {Console} from 'console';
+import {spawnOptions} from '../config';
 
 // Note:
 // ANSI Escape Sequence (\033 or \x1B)
@@ -71,6 +72,20 @@ class Logger extends Console {
   }
 }
 
-const logger = new Logger();
+const noop = () => undefined;
+
+// Initiates with new Logger Object if logging is enabled else
+// assigned with no operation logger object (this method is
+// faster compared to alternative methods).
+const logger = spawnOptions.logging
+  ? new Logger()
+  : {
+      log: noop,
+      info: noop,
+      warn: noop,
+      error: noop,
+      success: noop,
+      alert: noop,
+    };
 
 export default logger;
