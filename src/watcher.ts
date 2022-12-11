@@ -8,7 +8,13 @@ import {logger} from './utils';
 
 const debug = DEBUG('es-node-runner:watcher');
 
-const {delay, restartCmd} = spawnOptions;
+const {delay, restartCmd, clearTerminal} = spawnOptions;
+
+// Clears the terminal output
+function clearTerminalOutput() {
+  process.stdout.write('\x1Bc\x1B[3J');
+  debug(`Terminal output cleared`);
+}
 
 function restartSubProcess() {
   // Mark the sub process start timestamp
@@ -20,6 +26,12 @@ function restartSubProcess() {
 
 function restartOnChange(action: string) {
   debug(`${action}`);
+
+  // Clear the terminal on restart, if clearTerminal is set to true
+  if (clearTerminal === true) {
+    clearTerminalOutput();
+  }
+
   logger.alert(
     `\n[Watcher]: ${action}\n` + `Sub process will restart after ${delay} ms\n`
   );
@@ -36,6 +48,10 @@ process.stdin.on('data', (data) => {
     case restartCmd:
       logger.alert(`\nreceived '${cmd}' cmd, restarting sub process...\n`);
       restartSubProcess();
+      break;
+    // Matches clear cmd
+    case 'clear':
+      clearTerminalOutput();
       break;
     default:
       logger.warn(`unrecognized '${cmd}' cmd`);

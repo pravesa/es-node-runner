@@ -34,6 +34,9 @@ interface SpawnOptions {
    * @example restartCmd: 'rst'
    * @default 'rs' */
   restartCmd: string;
+  /** Clear the terminal output before restart
+   * @default false */
+  clearTerminal: boolean;
 }
 
 type OverridableConfig = {
@@ -96,6 +99,7 @@ const loadConfig = () => {
     spawnOptions: {
       delay: 1000,
       restartCmd: 'rs',
+      clearTerminal: false,
     },
   };
 
