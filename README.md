@@ -7,19 +7,25 @@ Node runner that transpiles typescript or es modules using blazing fast ⚡ esbu
 ## Usage
 
 1. Install as devDependency using npm or yarn,</br>
-   `npm i --save-dev es-node-runner`</br>
-   or</br>
-   `yarn add -D es-node-runner`
 
-2. Add your config using one of the available options. Config will be searched for in this order,</br>
+   ```sh
+   npm i --save-dev es-node-runner
+
+   # or
+
+   yarn add -D es-node-runner
+   ```
+
+2. Add your config using one of the available formats. es-node-runner uses only one file if there are multiple configuration files in the root directory, The priority order is as follows,</br>
 
    - es-node-runner.config.js
    - es-node-runner.config.json
    - package.json
 
-   There is no cascading of configs, so searching for config will end as soon as any of the above file is found. If no config is found, default config will be used.
+   If no configuration is found, then default config will be used.
 
-3. Finally, add `es-node-runner` or `enr` to package.json scripts</br>
+3. Finally, add `es-node-runner` (only windows) or `enr` (cross-platform) to package.json scripts</br>
+
    ```json
    {
      "scripts": {
@@ -27,7 +33,10 @@ Node runner that transpiles typescript or es modules using blazing fast ⚡ esbu
      }
    }
    ```
-   and run the script using npm or yarn as, `npm run <script_name>` or `yarn <script_name>`
+
+   and run the script using npm or yarn as, `npm run <script_name>` or `yarn <script_name>`</br>
+
+   > In v2.0.0, `enr` will be removed for the sake of cross-platform support. For instance, if someone contributing to your repo runs the above script in their unix env, it will output `command not found`.
 
 ## Configurations
 
