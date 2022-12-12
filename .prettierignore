@@ -18,8 +18,6 @@ lerna-debug.log*
 # Build directories
 dist
 dist-ssr
-lib
-bin
 
 # Yarn generated files
 .pnp.*

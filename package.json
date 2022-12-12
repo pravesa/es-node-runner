@@ -27,8 +27,8 @@
   "types": "types/config.d.ts",
   "repository": "https://github.com/pravesa/es-node-runner.git",
   "scripts": {
-    "build": "tsc --outDir lib",
-    "postbuild": "tsc src/config.ts --declaration --emitDeclarationOnly --outDir types",
+    "build": "tsc --outDir lib & tsc src/config.ts --declaration --emitDeclarationOnly --outDir types",
+    "postbuild": "prettier --write lib/**/* types/**/*",
     "start": "set DEBUG=* & node lib/index",
     "lint": "eslint",
     "lint:fix": "yarn lint --fix",
