@@ -20,9 +20,7 @@
     "lib/*",
     "types/*"
   ],
-  "bin": {
-    "enr": "lib/index.js"
-  },
+  "bin": "lib/index.js",
   "main": "lib/index.js",
   "types": "types/config.d.ts",
   "repository": "https://github.com/pravesa/es-node-runner.git",

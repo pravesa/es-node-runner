@@ -7,10 +7,17 @@ interface BuildOptions {
   /** Entry point for bundling
    * @default 'src/index.ts' */
   entry: string;
+  /** Sets the output directory for build operation.
+   * @default 'node_modules/.cache/es-node-runner' */
+  outdir: string;
+  /** Sets the file name for bundled output. This is applicable only if bundle is true.
+   * @default 'bundle.js' */
+  outfile: string;
   /** Sets the target for generated code
    * @see https://esbuild.github.io/api/#target
    * @default 'node14' */
   target: string;
+  format: 'iife' | 'cjs' | 'esm';
   /** Generates sourcemap
    * @default true */
   sourcemap: boolean;
@@ -96,7 +103,10 @@ const loadConfig = () => {
   const defaultConfig: OverridableConfig = {
     buildOptions: {
       entry: 'src/index.ts',
+      outdir: 'node_modules/.cache/es-node-runner',
+      outfile: 'bundle.js',
       target: 'node14',
+      format: 'cjs',
       sourcemap: true,
     },
     watchOptions: {

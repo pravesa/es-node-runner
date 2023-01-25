@@ -1,5 +1,6 @@
 import {build, BuildResult} from 'esbuild';
 import DEBUG from 'debug';
+import path from 'path';
 import {performance} from 'perf_hooks';
 import {buildOptions, spawnOptions} from './config';
 import {restart, run} from './runner';
@@ -16,8 +17,8 @@ const initialBuild = async () => {
   debug('starting initial build');
   const BUILD_START_TIME = performance.now();
 
-  const {entry, ...options} = buildOptions;
-  const outfile = './node_modules/.cache/esbuild/index.js';
+  const {entry, outdir, outfile, ...options} = buildOptions;
+  const output = path.join(outdir, outfile);
 
   try {
     // Call the build with loaded config
@@ -28,7 +29,7 @@ const initialBuild = async () => {
       platform: 'node',
       incremental: true,
       external: resolveNodeModulePaths(),
-      outfile: outfile,
+      outfile: output,
       ...options,
     });
 

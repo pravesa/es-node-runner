@@ -24,19 +24,17 @@ Node runner that transpiles typescript or es modules using blazing fast ⚡ esbu
 
    If no configuration is found, then default config will be used.
 
-3. Finally, add `es-node-runner` (only windows) or `enr` (cross-platform) to package.json scripts</br>
+3. Finally, add `es-node-runner` to package.json scripts</br>
 
    ```json
    {
      "scripts": {
-       "<script_name>": "es-node-runner" // or "enr"
+       "<script_name>": "es-node-runner"
      }
    }
    ```
 
    and run the script using npm or yarn as, `npm run <script_name>` or `yarn <script_name>`</br>
-
-   > In v2.0.0, `enr` will be removed for the sake of cross-platform support. For instance, if someone contributing to your repo runs the above script in their unix env, it will output `command not found`.
 
 ## Configurations
 
@@ -46,6 +44,11 @@ Following options are available for configuring es-node-runner.
 buildOptions: {
     // Entry point for bundling
     entry: string,
+    // Sets the output directory for build operation.
+    outdir: string,
+    // Sets the file name for bundled output. This is applicable only if bundle is true.
+    outfile: string,
+    format: 'iife' | 'cjs' | 'esm',
     // Sets the target for generated code
     target: string,
     // Generates sourcemap
