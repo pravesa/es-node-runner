@@ -3,9 +3,9 @@
 /* eslint-disable no-console */
 import DEBUG from 'debug';
 import {performance} from 'perf_hooks';
-import {dispose} from './transpiler';
-import {formatElapsedTime, logger} from './utils';
-import watch from './watcher';
+import {dispose} from './transpiler.js';
+import {formatElapsedTime, logger} from './utils/index.js';
+import watch from './watcher.js';
 
 const debug = DEBUG('es-node-runner:main');
 

@@ -2,7 +2,7 @@
 import {ChildProcess, exec, execSync} from 'child_process';
 import {spawn} from 'cross-spawn';
 import DEBUG from 'debug';
-import {logger} from './utils';
+import {logger} from './utils/index.js';
 
 const debug = DEBUG('es-node-runner:runner');
 

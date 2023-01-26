@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 import {Console} from 'console';
-import {spawnOptions} from '../config';
+import {spawnOptions} from '../config.js';
 
 // Note:
 // ANSI Escape Sequence (\033 or \x1B)

@@ -3,9 +3,9 @@ import DEBUG from 'debug';
 import path from 'path';
 import {writeFileSync} from 'fs';
 import {performance} from 'perf_hooks';
-import {buildOptions, spawnOptions} from './config';
-import {restart, run} from './runner';
-import {debounce, logger, resolveNodeModulePaths} from './utils';
+import {buildOptions, spawnOptions} from './config.js';
+import {restart, run} from './runner.js';
+import {debounce, logger, resolveNodeModulePaths} from './utils/index.js';
 
 const debug = DEBUG('es-node-runner:transpiler');
 const lightning = process.stdout.isTTY ? '\u26A1' : '';

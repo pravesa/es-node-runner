@@ -2,9 +2,9 @@
 import {watch} from 'chokidar';
 import DEBUG from 'debug';
 import {performance} from 'perf_hooks';
-import {spawnOptions, watchOptions} from './config';
-import {rebuild, initialBuild} from './transpiler';
-import {logger} from './utils';
+import {spawnOptions, watchOptions} from './config.js';
+import {rebuild, initialBuild} from './transpiler.js';
+import {logger} from './utils/index.js';
 
 const debug = DEBUG('es-node-runner:watcher');
 
