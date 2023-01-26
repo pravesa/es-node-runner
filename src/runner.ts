@@ -4,7 +4,7 @@ import {spawn} from 'cross-spawn';
 import DEBUG from 'debug';
 import {logger} from './utils';
 
-const debug = DEBUG('es-node-runner:server');
+const debug = DEBUG('es-node-runner:runner');
 
 let child: ChildProcess, reRun: () => void;
 

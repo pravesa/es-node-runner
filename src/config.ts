@@ -1,5 +1,6 @@
 import {resolve} from 'path';
 import DEBUG from 'debug';
+import {createRequire} from 'module';
 
 const debug = DEBUG('es-node-runner:config');
 
@@ -95,7 +96,7 @@ const overrideTargetObj = <T extends Record<string, any>>(
 
 // Loads the user defined config from root of the cwd and overrides the
 // default config values.
-const loadConfig = () => {
+const loadConfig = async () => {
   debug('loading config');
   const cwd = process.cwd();
 
@@ -126,16 +127,23 @@ const loadConfig = () => {
 
   try {
     debug('looking for es-node-runner.config file');
-    // Try to load es-node-runner.config.{js,json}
-    userConfig = require(resolve(cwd, 'es-node-runner.config'));
+    // Try to load es-node-runner.config.js (esm or cjs)
+    userConfig = (
+      await import('file://' + resolve(cwd, 'es-node-runner.config.js'))
+    ).default;
   } catch (error) {
     debug(
       'es-node-runner.config file not found...looking for config in package.json'
     );
     // If no es-node-runner.config file found, look for configs in package.json
     // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const require = createRequire(import.meta.url);
     const packageJson = require(resolve(cwd, 'package.json'));
 
+    // experimental import of json as modules
+    // const packageJson = (await import('file://' + resolve(cwd, 'package.json'), {
+    //   assert: {type: 'json'},
+    // })).default;
     userConfig = packageJson['es-node-runner'] ?? {};
   }
 
@@ -155,4 +163,5 @@ const loadConfig = () => {
 
 // Do not export loadConfig() as it will be called again
 // when imported in each modules.
-export const {buildOptions, watchOptions, spawnOptions} = loadConfig();
+/** @internal */
+export const {buildOptions, watchOptions, spawnOptions} = await loadConfig();

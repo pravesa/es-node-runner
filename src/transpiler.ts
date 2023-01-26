@@ -1,6 +1,7 @@
 import {build, BuildResult} from 'esbuild';
 import DEBUG from 'debug';
 import path from 'path';
+import {writeFileSync} from 'fs';
 import {performance} from 'perf_hooks';
 import {buildOptions, spawnOptions} from './config';
 import {restart, run} from './runner';
@@ -39,13 +40,19 @@ const initialBuild = async () => {
       ).toFixed(2)} ms\n`
     );
 
-    debug('build completed');
+    debug('initial build completed');
   } catch (error) {
-    debug('build failed');
+    debug('initial build failed');
     throw error;
   }
 
-  debug('initial build completed');
+  if (options.format === 'esm' && outdir.includes('node_modules')) {
+    writeFileSync(
+      path.join(outdir, 'package.json'),
+      JSON.stringify({type: 'module'}),
+      {encoding: 'utf-8'}
+    );
+  }
 
   // Spawn a child process (eg: server) once the initial build finishes.
   run([output]);
@@ -81,8 +88,6 @@ const rebuild = debounce(
         throw error;
       }
     }
-
-    debug('rebuild completed');
     // Restart the process that was spawned after the initial build
     restart();
 

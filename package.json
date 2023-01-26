@@ -14,6 +14,7 @@
     "url": "https://github.com/pravesa/es-node-runner/issues",
     "email": "praveen747757@gmail.com"
   },
+  "type": "module",
   "license": "MIT",
   "author": "Praveen Saravanan",
   "files": [
@@ -25,7 +26,7 @@
   "types": "types/config.d.ts",
   "repository": "https://github.com/pravesa/es-node-runner.git",
   "scripts": {
-    "build": "tsc --outDir lib & tsc src/config.ts --declaration --emitDeclarationOnly --outDir types",
+    "build": "tsc --project tsconfig.json && tsc --project tsconfig.declaration.json",
     "postbuild": "prettier --write lib/**/* types/**/*",
     "start": "set DEBUG=* & node lib/index",
     "lint": "eslint",
