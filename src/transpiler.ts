@@ -48,7 +48,7 @@ const initialBuild = async () => {
   debug('initial build completed');
 
   // Spawn a child process (eg: server) once the initial build finishes.
-  run([outfile]);
+  run([output]);
 
   logger.success(
     `[Sub Process]: Spawned in ${(
