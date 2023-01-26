@@ -19,7 +19,6 @@ Node runner that transpiles typescript or es modules using blazing fast ⚡ esbu
 2. Add your config using one of the available formats. es-node-runner uses only one file if there are multiple configuration files in the root directory, The priority order is as follows,</br>
 
    - es-node-runner.config.js
-   - es-node-runner.config.json
    - package.json
 
    If no configuration is found, then default config will be used.
@@ -76,7 +75,28 @@ spawnOptions: {
 
 Note: All options are optional.
 
-#### For flexibility, prefer js config over json.
+## CLI Options
+
+Following command line options are available,
+
+1. `--debug` - with optional comma(,) separated namespace to enable specific namespace for debugging.
+
+## Config file formats
+
+#### ESM version of config file
+
+##### Example
+
+```js
+export default {
+  spawnOptions: {
+    // This will disables the logging if debug is enabled
+    logging: !process.env.DEBUG,
+  },
+};
+```
+
+#### CommonJs version of config file
 
 ##### Example
 
