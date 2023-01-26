@@ -2,6 +2,13 @@ import {resolve} from 'path';
 import DEBUG from 'debug';
 import {createRequire} from 'module';
 
+const arg = process.argv.slice(2);
+const idx = arg.indexOf('--debug');
+
+if (idx !== -1) {
+  DEBUG.enable(arg[idx + 1] ?? '*');
+}
+
 const debug = DEBUG('es-node-runner:config');
 
 interface BuildOptions {

@@ -18,7 +18,14 @@ declare global {
 global.PROCESS_START_TIME = performance.now();
 
 function main() {
-  watch();
+  try {
+    watch();
+  } catch (error) {
+    logger.info(
+      '\ntry cli option --debug with optional comma(,) separated namespace for enabling debugging.\n'
+    );
+    throw error;
+  }
 }
 
 process.on('exit', (code: number) => {
