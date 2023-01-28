@@ -59,6 +59,9 @@ interface SpawnOptions {
   /** Enable or disable logging
    * @default true */
   logging: boolean;
+  /** Pass cli options to node executable
+   * @default [] */
+  args: string[];
 }
 
 type OverridableConfig = {
@@ -127,6 +130,7 @@ const loadConfig = async () => {
       clearTerminal: false,
       autoRestart: true,
       logging: true,
+      args: [],
     },
   };
 

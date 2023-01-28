@@ -70,6 +70,8 @@ spawnOptions: {
     autoRestart: boolean,
     // Enable or disable logging
     logging: boolean,
+    // Pass cli options to node executable
+    args: string[];
 },
 ```
 
