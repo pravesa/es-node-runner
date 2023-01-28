@@ -83,19 +83,20 @@ const rebuild = debounce(
         );
 
         debug('rebuild completed');
+
+        // Restart the process that was spawned after the initial build
+        restart();
+
+        logger.success(
+          `[Sub Process]: Respawned in ${(
+            performance.now() - global.SUB_PROCESS_RESTART_TIME
+          ).toFixed(2)} ms\n`
+        );
       } catch (error) {
         debug('rebuild failed');
-        throw error;
+        logger.error(error);
       }
     }
-    // Restart the process that was spawned after the initial build
-    restart();
-
-    logger.success(
-      `[Sub Process]: Respawned in ${(
-        performance.now() - global.SUB_PROCESS_RESTART_TIME
-      ).toFixed(2)} ms\n`
-    );
   },
   spawnOptions.autoRestart === false ? 0 : spawnOptions.delay
 );

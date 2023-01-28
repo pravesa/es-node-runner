@@ -6,7 +6,7 @@ import {logger} from './utils/index.js';
 
 const debug = DEBUG('es-node-runner:runner');
 
-let child: ChildProcess, reRun: () => void;
+let child: ChildProcess | null, reRun: () => void;
 
 // Sets true if the platform is windows
 const isWin = process.platform === 'win32';
@@ -74,8 +74,11 @@ function run(this: unknown, spawnArgs: string[]) {
   // Listens for an exit event
   subProcess.once('exit', (code: number) => {
     debug(`sub process ${subProcess.pid} exited with code ${code}`);
+    child = null;
     if (code > 0) {
       logger.error(`Sub process exited with code ${code}\n`);
+      // Exit parent process if the exit code is not '0'
+      process.exit(0);
     }
   });
 }
@@ -86,9 +89,9 @@ function stop() {
   // On successful termination, status will be assigned with number 48 (ASCII Code) for 0
   let status = -1;
 
-  debug('terminating child processes');
-
   if (child && child.pid) {
+    debug('terminating child processes');
+
     // Windows specific kill implementation
     if (isWin) {
       debug('executing windows kill cmd');
