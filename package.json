@@ -1,6 +1,6 @@
 {
   "name": "es-node-runner",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Node runner that transpiles typescript or es modules using blazing fast ⚡ esbuild and restarts the process automatically on change. Suitable for node development server.",
   "keywords": [
     "monitor",
